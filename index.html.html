@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JoshFurnished | Login + Main Interface + User Logs</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src='https://kit.fontawesome.com/9d1a3267eb.js' crossorigin='anonymous'></script>
+<style>
+/* ---------- GLOBAL ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
+
+:root {
+  --matte-white: rgb(253, 251, 249);
+  --matte-black: rgb(20, 20, 20);
+  --matte-cyan: #00bfff;
+}
+
+body, html { margin:0; padding:0; font-family: 'Open Sans', sans-serif; background-color: var(--matte-black); scroll-behavior: smooth; }
+
+/* ---------- LOGIN / REGISTER ---------- */
+#login-section { display:flex; justify-content:center; align-items:center; min-height:100vh; background: linear-gradient(135deg, #000428, #004e92); }
+.login-page { width:360px; padding:8% 0 0; margin:auto; }
+.form { position:relative; z-index:1; background:#0d0d0d; max-width:360px; margin:0 auto 100px; padding:45px; text-align:center; box-shadow:0 0 25px rgba(0,174,255,0.3); border-radius:12px; }
+.form input { outline:0; background:#1a1a1a; color:white; width:100%; border:1px solid #00b7ff; margin:0 0 15px; padding:15px; font-size:14px; border-radius:6px; }
+.form input::placeholder { color:#aaa; }
+.form button { outline:0; background: linear-gradient(90deg, #007bff, #00d4ff); width:100%; border:0; padding:15px; color:#FFFFFF; font-size:14px; cursor:pointer; border-radius:6px; }
+.form button:hover { background: linear-gradient(90deg, #00d4ff, #007bff); box-shadow:0 0 10px #00d4ff; }
+.form .message { margin:15px 0 0; color:#b3b3b3; font-size:12px; }
+.form .message a { color:#00d4ff; text-decoration:none; cursor:pointer; }
+.register-form { display:none; }
+
+/* ---------- MAIN INTERFACE ---------- */
+#main-interface { display:none; }
+
+#nav-bar { position:fixed; top:0; width:100%; background-color:var(--matte-black); box-shadow:0 2px 10px rgba(0,0,0,0.3); z-index:999; }
+.container { display:flex; justify-content:space-between; align-items:center; padding:0px 50px; }
+.logo { margin-left:10px; cursor:pointer; color:var(--matte-white); font-size:2rem; }
+.cyan-font { color: var(--matte-cyan); }
+.nav1 { position:relative; }
+.nav1 ul { display:flex; align-items:center; list-style:none; padding:0; }
+.nav1 ul li { padding:0 15px; }
+.nav1 ul li a { color:var(--matte-white); text-decoration:none; }
+.nav1 ul li a:hover { color: var(--matte-cyan); }
+.btn { border:none; font-size:16px; padding:5px 20px; background:var(--matte-white); color:var(--matte-black); border-radius:5px; cursor:pointer; transition:0.3s; }
+.btn:hover { background-color:var(--matte-cyan); color:var(--matte-black); }
+
+/* ---------- HAMBURGER MENU ---------- */
+#click { display:none; }
+.menu-btn { display:none; position:relative; cursor:pointer; width:30px; height:25px; z-index:1001; }
+.menu-btn span, .menu-btn::before, .menu-btn::after { content:''; position:absolute; width:100%; height:3px; background:var(--matte-white); left:0; transition:0.3s; border-radius:2px; }
+.menu-btn span { top:50%; transform:translateY(-50%); }
+.menu-btn::before { top:0; }
+.menu-btn::after { bottom:0; }
+#click:checked ~ ul { display:flex; flex-direction:column; position:absolute; top:60px; right:0; background:var(--matte-black); width:200px; text-align:right; padding:20px; gap:15px; border-radius:0 0 0 12px; }
+#click:checked + .menu-btn span { background:transparent; }
+#click:checked + .menu-btn::before { transform:rotate(45deg) translate(5px,5px); }
+#click:checked + .menu-btn::after { transform:rotate(-45deg) translate(5px,-5px); }
+
+@media (max-width:768px){ .nav1 ul { display:none; flex-direction:column; gap:15px; } .menu-btn { display:block; } }
+
+/* ---------- HERO ---------- */
+#hero { margin-top:80px; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; }
+#hero .content { margin:1.5rem; }
+#hero .content h1 { font-size:3rem; color:var(--matte-white); }
+#hero .content .explore { margin-top:20px; padding:10px 20px; background:var(--matte-white); color:var(--matte-black); border-radius:5px; cursor:pointer;}
+#hero .content .explore:hover { background:var(--matte-cyan); color:var(--matte-black);}
+#hero img { margin:1.4rem; max-width:100%; height:auto; }
+
+/* ---------- SECTIONS ---------- */
+.section-margin { margin:4rem auto; padding:0 2rem; color:var(--matte-white); }
+#how-work { display:flex; flex-direction:column; align-items:center; gap:2rem; }
+.wrap { display:flex; flex-wrap:wrap; gap:2rem; justify-content:center; }
+.work { display:flex; flex-direction:column; align-items:center; padding:1.5rem; width:250px; height:270px; background:#333; border-bottom:3px solid var(--matte-cyan); text-align:center;}
+.work h3 { color:var(--matte-cyan); }
+.work h4 { font-size:1.2rem; margin:5px 0; }
+.work a { color:var(--matte-cyan); }
+#perfect { display:flex; flex-direction:column; align-items:center; margin:2rem 0; }
+#perfect iframe { width:100%; max-width:560px; margin-top:1rem; transition:all 0.3s ease; }
+#perfect iframe:hover { transform:scale(1.05); }
+#top-design, #featured, #contact { display:flex; flex-direction:column; align-items:center; }
+.design-grid, .product-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+.design-grid .area, .product-grid .product { transition:all 0.3s ease; }
+.design-grid .area:hover, .product-grid .product:hover { transform:scale(1.05); }
+#contact form { display:flex; gap:1rem; flex-wrap:wrap; }
+#contact input, .sub-btn { padding:10px; border-radius:5px; border:none; font-size:1rem; }
+.sub-btn:hover { background-color:var(--matte-cyan); }
+
+/* ---------- USER LOGS MODAL ---------- */
+#user-logs-modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#0d0d0d; padding:25px; border-radius:12px; box-shadow:0 0 20px rgba(0,174,255,0.5); width:300px; text-align:center; color:white; z-index:1000; }
+#user-logs-list p { font-size:14px; color:#ccc; margin:5px 0; }
+#close-logs { margin-top:10px; padding:8px 20px; border:none; border-radius:8px; background: linear-gradient(90deg,#007bff,#00d4ff); color:white; cursor:pointer; }
+
+/* ---------- INVENTORY MODAL ---------- */
+#inventory-modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#0d0d0d; padding:25px; border-radius:12px; box-shadow:0 0 20px rgba(0,174,255,0.5); width:350px; text-align:center; color:white; z-index:1000; }
+#inventory-list p { font-size:14px; color:#ccc; margin:5px 0; }
+#close-inv, #add-item { margin-top:10px; padding:8px 20px; border:none; border-radius:8px; background: linear-gradient(90deg,#007bff,#00d4ff); color:white; cursor:pointer; margin-right:5px; }
+</style>
+</head>
+<body>
+
+<!-- ====== LOGIN ====== -->
+<section id="login-section">
+  <div class="login-page">
+    <div class="form">
+      <form class="register-form">
+        <input type="text" id="reg-name" placeholder="Name" required/>
+        <input type="password" id="reg-pass" placeholder="Password" required/>
+        <input type="text" id="reg-email" placeholder="Email address" required/>
+        <button type="button" id="create-btn">Create Account</button>
+        <p class="message">Already registered? <a id="to-login">Sign In</a></p>
+      </form>
+      <form class="login-form">
+        <input type="text" id="login-user" placeholder="Username" required/>
+        <input type="password" id="login-pass" placeholder="Password" required/>
+        <button type="button" id="login-btn">Login</button>
+        <p class="message">Not registered? <a id="to-register">Create an account</a></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MAIN INTERFACE ====== -->
+<section id="main-interface">
+<header>
+  <nav id='nav-bar'>
+    <div class='container'>
+      <div class='logo'>
+        <img src='' class='header-img'>JoshFurnished<span class='cyan-font'>.</span>
+      </div>
+      <div class='nav1'>
+        <input type='checkbox' id='click'>
+        <label for='click' class='menu-btn'><span></span></label>
+        <ul>
+          <li><a class='nav-link' href='#top-design'>Top design</a></li>
+          <li><a class='nav-link' href='#contact'>Contact us</a></li>
+          <li><button id="order-btn" class='btn'>Orders</button></li>
+          <li><button id="logs-btn" class='btn'>User Logs</button></li>
+          <li><button id="logout-btn" class='btn'>Sign Out</button></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section id='hero'>
+    <div class='content'>
+      <h1><span class='cyan-font'> Custom furniture<br></span> To Do List!</h1>
+      <button type='button' class='explore'>Explore More</button>
+    </div>
+    <div><img src='https://images.unsplash.com/photo-1596900779744-2bdc4a90509a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=540&w=600' alt=''></div>
+  </section>
+
+  <!-- HOW WE WORK -->
+  <section id='how-work' class='section-margin'>
+    <h3>How we work<span class='cyan-font'>.</span></h3>
+    <div class='wrap'>
+      <div class='work'>
+        <h3><i class='fas fa-envelope-square'></i></h3>
+        <h4>Contact Us</h4>
+        <p>we will help you out with your preference</p>
+        <p>contact us now!</p>
+        <a class='nav-link' href='#contact'>joshlaberon@gmail.com</a>
+        <a class='nav-link' href='#contact'>09192939495</a>
+      </div>
+      <div class='work'>
+        <h3><i class='fas fa-ruler-combined'></i></h3>
+        <h4>We Visit, We Design</h4>
+        <p>Our experts will design your home furniture per your preference</p>
+      </div>
+      <div class='work'>
+        <h3><i class='fas fa-chair'></i></h3>
+        <h4>Order Furniture</h4>
+        <p>Get your custom furniture delivered within days</p>
+        <a class='nav-link' href='#contact'>Order now!</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section id='perfect' class='section-margin'>
+    <h3>Perfection matters a lot<span class='cyan-font'>.</span></h3>
+    <iframe id='video' height='315' src='https://www.youtube.com/embed/S-A0qLTxf-U?controls=0' frameborder='0' allowfullscreen></iframe>
+  </section>
+
+  <!-- TOP DESIGN -->
+  <section id='top-design' class='section-margin'>
+    <h3>Top Design<span class='cyan-font'>.</span></h3>
+    <div class='design-grid'>
+      <div class='area'><img src='https://source.unsplash.com/OtXADkUh3-I/260x300' alt=''><p> by Traci T Timon<span class='cyan-font'>.</span></p></div>
+      <div class='area'><img src='https://source.unsplash.com/nzwaWv_Vnxw/260x300' alt=''><p> by Kathleen X niArnel<span class='cyan-font'>.</span></p></div>
+      <div class='area'><img src='https://source.unsplash.com/g01h0WtY22s/260x300' alt=''><p> by Mico singleMom<span class='cyan-font'>.</span></p></div>
+      <div class='area'><img src='https://source.unsplash.com/_ylenZL2u7M/260x300' alt=''><p> by Erica BembangKevin<span class='cyan-font'>.</span></p></div>
+    </div>
+  </section>
+</main>
+</section>
+
+<!-- ====== USER LOGS MODAL ====== -->
+<div id="user-logs-modal">
+  <h2>User Logs</h2>
+  <div id="user-logs-list"></div>
+  <button id="close-logs">Close</button>
+</div>
+
+<!-- ====== INVENTORY MODAL ====== -->
+<div id="inventory-modal">
+  <h2>Inventory</h2>
+  <select id="item-select">
+    <option value="">--Select Item--</option>
+    <option value="Chairs">Chairs</option>
+    <option value="Table">Table</option>
+    <option value="Chandelier">Chandelier</option>
+    <option value="Plants">Plants</option>
+    <option value="Beds">Beds</option>
+    <option value="Couch/Sofa">Couch/Sofa</option>
+    <option value="Cabinet">Cabinet</option>
+    <option value="Mattress">Mattress</option>
+  </select>
+  <button id="add-item">Add Order</button>
+  <div id="inventory-list"></div>
+  <button id="close-inv">Close</button>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Toggle login/register
+  $("#to-register").click(function(){ $(".login-form").hide(); $(".register-form").fadeIn(); });
+  $("#to-login").click(function(){ $(".register-form").hide(); $(".login-form").fadeIn(); });
+
+  // Create account
+  $("#create-btn").click(function(){
+    const name = $("#reg-name").val();
+    const pass = $("#reg-pass").val();
+    const email = $("#reg-email").val();
+    if(name && pass && email){
+      localStorage.setItem("user", name);
+      localStorage.setItem("pass", pass);
+      alert("Account created successfully!");
+      $(".register-form").hide(); $(".login-form").fadeIn();
+    } else { alert("Please fill all fields!"); }
+  });
+
+  // Login
+  $("#login-btn").click(function(){
+    const user = $("#login-user").val();
+    const pass = $("#login-pass").val();
+    if(user === localStorage.getItem("user") && pass === localStorage.getItem("pass")){
+      $("#login-section").hide();
+      $("#main-interface").fadeIn();
+      let logs = JSON.parse(localStorage.getItem("userLogs")) || [];
+      logs.push({ username: user, time: new Date().toLocaleString() });
+      localStorage.setItem("userLogs", JSON.stringify(logs));
+    } else { alert("Invalid credentials!"); }
+  });
+
+  // Show logs
+  $("#logs-btn").click(function(){
+    const logs = JSON.parse(localStorage.getItem("userLogs")) || [];
+    let html = "";
+    if(logs.length===0) html="<p>No logs yet.</p>";
+    else logs.forEach((log,i)=>{ html+=`<p>👤 ${log.username} — <small>${log.time}</small> <button class='delete-log' data-index='${i}'>Delete</button></p>`; });
+    $("#user-logs-list").html(html);
+    $("#user-logs-modal").fadeIn();
+  });
+
+  // Delete individual log
+  $(document).on("click",".delete-log", function(){
+    let idx=$(this).data("index");
+    let logs=JSON.parse(localStorage.getItem("userLogs"))||[];
+    logs.splice(idx,1);
+    localStorage.setItem("userLogs", JSON.stringify(logs));
+    $(this).parent().remove();
+    alert("The user is removed");
+  });
+
+  // Close logs
+  $("#close-logs").click(function(){ $("#user-logs-modal").fadeOut(); });
+
+  // Logout
+  $("#logout-btn").click(function(){ $("#main-interface").hide(); $("#login-section").fadeIn(); });
+
+  // Open inventory modal
+  $("#order-btn").click(function(){
+    $("#inventory-modal").fadeIn();
+    renderInventory();
+  });
+
+  // Close inventory
+  $("#close-inv").click(function(){ $("#inventory-modal").fadeOut(); });
+
+  // Add item to inventory
+  $("#add-item").click(function(){
+    const item=$("#item-select").val();
+    if(item){
+      let inventory=JSON.parse(localStorage.getItem("inventory"))||[];
+      inventory.push({ name:item, time:new Date().toLocaleString() });
+      localStorage.setItem("inventory", JSON.stringify(inventory));
+      renderInventory();
+    } else { alert("Please select an item."); }
+  });
+
+  // Render inventory list
+  function renderInventory(){
+    let inventory=JSON.parse(localStorage.getItem("inventory"))||[];
+    let html="";
+    if(inventory.length===0) html="<p>No orders yet.</p>";
+    else inventory.forEach((item,i)=>{
+      html+=`<p>${item.name} — <small>${item.time}</small> <button class='delete-inv' data-index='${i}'>Delete</button></p>`;
+    });
+    $("#inventory-list").html(html);
+  }
+
+  // Delete inventory item
+  $(document).on("click",".delete-inv", function(){
+    let idx=$(this).data("index");
+    let inventory=JSON.parse(localStorage.getItem("inventory"))||[];
+    inventory.splice(idx,1);
+    localStorage.setItem("inventory", JSON.stringify(inventory));
+    $(this).parent().remove();
+    alert("The item is removed");
+  });
+});
+</script>
+</body>
+</html>
